@@ -23,7 +23,9 @@ class Trainer(object):
 				 use_gpu = True,
 				 opt_method = "sgd",
 				 save_steps = None,
-				 checkpoint_dir = None):
+				 checkpoint_dir = None,
+				 validator = None,
+				 valiation_step = 10):
 
 		self.work_threads = 8
 		self.train_times = train_times
@@ -39,6 +41,9 @@ class Trainer(object):
 		self.use_gpu = use_gpu
 		self.save_steps = save_steps
 		self.checkpoint_dir = checkpoint_dir
+
+		self.validator = validator
+		self.valiation_step = valiation_step
 
 	def train_one_step(self, data):
 		self.optimizer.zero_grad()
@@ -97,6 +102,9 @@ class Trainer(object):
 			if self.save_steps and self.checkpoint_dir and (epoch + 1) % self.save_steps == 0:
 				print("Epoch %d has finished, saving..." % (epoch))
 				self.model.save_checkpoint(os.path.join(self.checkpoint_dir + "-" + str(epoch) + ".ckpt"))
+			
+			if (epoch + 1) % self.valiation_step == 0 and self.validator:
+				self.validator.run_link_prediction(type_constrain = False)
 
 	def set_model(self, model):
 		self.model = model

@@ -35,13 +35,19 @@ model = NegativeSampling(
 	regul_rate = 1.0
 )
 
+tester = Tester(model = distmult, data_loader = test_dataloader, use_gpu = True)
 
 # train the model
-trainer = Trainer(model = model, data_loader = train_dataloader, train_times = 2000, alpha = 0.5, use_gpu = True, opt_method = "adagrad")
+trainer = Trainer(model = model, 
+				 data_loader = train_dataloader, 
+				 train_times = 2000, 
+				 alpha = 0.5, 
+				 use_gpu = True, 
+				 opt_method = "adagrad",
+				 validator = tester)
 trainer.run()
 distmult.save_checkpoint('./checkpoint/distmult.ckpt')
 
 # test the model
 distmult.load_checkpoint('./checkpoint/distmult.ckpt')
-tester = Tester(model = distmult, data_loader = test_dataloader, use_gpu = True)
 tester.run_link_prediction(type_constrain = False)
