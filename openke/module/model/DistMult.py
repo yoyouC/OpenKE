@@ -68,5 +68,5 @@ class DistMult(Model):
 		return (self.ent_embeddings.weight.norm(p = 3)**3 + self.rel_embeddings.weight.norm(p = 3)**3)
 
 	def predict(self, data):
-		score = -self.forward(data)
-		return score.cpu().data.numpy()
+		score = self.forward(data)
+		return score

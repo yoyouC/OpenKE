@@ -1,6 +1,3 @@
-import imp
-import openke
-from openke.config import Trainer, Tester
 from openke.module.model import DistMult
 from openke.module.loss import SoftplusLoss
 from openke.module.strategy import NegativeSampling
@@ -36,6 +33,7 @@ model = NegativeSampling(
 	device=device,
 	tot_ent=train_set.get_tot_ent()
 )
+
 
 validator = Tester(model = distmult, data_loader = valid_loader, use_gpu = use_gpu, entity_count = train_set.get_tot_ent())
 
